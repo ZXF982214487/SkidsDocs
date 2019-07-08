@@ -27,6 +27,7 @@ Trailbreaker快速参考
    LED64
    Chinese
    openmv
+   co2
 ==================
 
 * :ref:`genindex`
