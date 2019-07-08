@@ -33,16 +33,16 @@ MH-Z14A二氧化碳模块
 	from pyb import Pin
 	from pyb import UART
 	class MHZ14A():
-		PACKET = [0xff, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79]
-		ZERO = [0xff, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78]
-		def __init__(self):
+		PACKET = [0xff, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79]#读气体浓度值命令
+		ZERO = [0xff, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78]#校准传感器零点命令
+		def __init__(self):#初始化
 			self.uart = UART(4, 9600,bits=8,parity = None)                        
 			time.sleep(2)
-		def zero(self):
+		def zero(self):#校准零点
 			#print(bytearray(MHZ14A.ZERO))
 			self.uart.write(bytearray(MHZ14A.ZERO))
 		
-		def get(self):
+		def get(self):#读取气体浓度
 			self.uart.write(bytearray(MHZ14A.PACKET))
 			#print(bytearray(MHZ14A.PACKET))
 			res=self.uart.read(9)
@@ -51,7 +51,7 @@ MH-Z14A二氧化碳模块
 			#for i in range(0,len(res))
 			res = bytearray(res)
 			checksum = 0xff & (~(res[1] + res[2] + res[3] + res[4] + res[5] + res[6] + res[7]) + 1)
-			if res[8] == checksum:
+			if res[8] == checksum:#校验
 				print('ppm:',((res[2] << 8) | res[3]))
 				#print(res[4])
 				return {
